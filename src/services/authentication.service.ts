@@ -14,6 +14,7 @@ export class AuthenticationService {
     }
 
     async loginAsync(loginModel: LoginModel): Promise<any> {
+
         const user = await this.userCollection.findOne({ username: loginModel.username }).exec();
         if (user) {
             const password = loginModel.password;
@@ -27,7 +28,6 @@ export class AuthenticationService {
 
     async registerAsync(userModel: UserModel): Promise<any> {
         const user = await this.userCollection.findOne({ username: userModel.username, email: userModel.email }).exec();
-        console.log(user)
         if (user) {
             return false
         }

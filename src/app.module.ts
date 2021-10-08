@@ -1,9 +1,13 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { TerminusModule } from '@nestjs/terminus';
+import { AuthModule } from './auth/auth.module';
+import { HttpModule } from '@nestjs/axios'
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import { DatabaseModule } from './modules/database.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware'
 import configuration from './config/configuration';
 import { AppController } from './app.controller';
@@ -22,13 +26,15 @@ import { PostSchema } from './schemas/post.schema';
 import { TagSchema } from './schemas/tag.schema';
 import { CategorySchema } from './schemas/category.schema';
 import { UserSchema } from './schemas/user.schema';
+import { HealthController } from './pages/health/health.controller';
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: '.env.development',
       load: [configuration],
     }),
-    MongooseModule.forRoot('mongodb://localhost/blogs'),
+    DatabaseModule,
+
     MongooseModule.forFeature([
       { name: 'Posts', schema: PostSchema },
       { name: 'Tags', schema: TagSchema },
@@ -44,6 +50,15 @@ import { UserSchema } from './schemas/user.schema';
       secret: "secretKey",
       signOptions: { expiresIn: '60s' },
     }),
+    // AuthModule,
+    TerminusModule,
+    HttpModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: () => ({
+        timeout: 5000,
+        maxRedirects: 5,
+      }),
+    })
   ],
   controllers: [
     AppController,
@@ -52,9 +67,10 @@ import { UserSchema } from './schemas/user.schema';
     ApiTagController,
     ApiCategoryController,
     ApiLoginController,
-    ApiRegisterController
+    ApiRegisterController,
+    HealthController
   ],
-  providers: [AppService, PostService, TagService, CategoryService, AuthenticationService],
+  providers: [ConfigService, AppService, PostService, TagService, CategoryService, AuthenticationService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
