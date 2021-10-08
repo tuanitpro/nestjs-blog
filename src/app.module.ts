@@ -27,6 +27,7 @@ import { TagSchema } from './schemas/tag.schema';
 import { CategorySchema } from './schemas/category.schema';
 import { UserSchema } from './schemas/user.schema';
 import { HealthController } from './pages/health/health.controller';
+import { UploaderController } from './pages/uploader/uploader.controller';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -68,7 +69,8 @@ import { HealthController } from './pages/health/health.controller';
     ApiCategoryController,
     ApiLoginController,
     ApiRegisterController,
-    HealthController
+    HealthController,
+    UploaderController
   ],
   providers: [ConfigService, AppService, PostService, TagService, CategoryService, AuthenticationService],
 })
