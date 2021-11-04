@@ -1,4 +1,4 @@
-import { ValidationPipe } from '@nestjs/common';
+import { RequestMethod, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AuthGuard } from './guards/auth.guard';
@@ -13,7 +13,12 @@ async function bootstrap() {
   app.useGlobalGuards(new AuthGuard());
   app.useGlobalPipes(new ValidationPipe());
   app.use(new compression());
-  // app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api/v1',
+  {
+    exclude: [{ path: '/', method: RequestMethod.GET },
+    { path: 'health', method: RequestMethod.GET },
+    { path: 'swagger', method: RequestMethod.GET }],
+  });
   const options = new DocumentBuilder()
     .setTitle('NestJS Blog')
     .setDescription('The API description')

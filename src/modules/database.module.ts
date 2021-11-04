@@ -8,7 +8,7 @@ import { UserSchema } from '../schemas/user.schema';
 
 @Module({
     imports: [
-        MongooseModule.forRoot('mongodb://localhost/blogs'),
+        MongooseModule.forRoot('mongodb://127.0.0.1:27011/blogs'),
         MongooseModule.forFeature([
             { name: 'Posts', schema: PostSchema },
             { name: 'Tags', schema: TagSchema },

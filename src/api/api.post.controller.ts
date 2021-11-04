@@ -4,7 +4,7 @@ import { PostModel } from '../models/post.model'
 import { PostService } from '../services/post.service'
 import { Post as PostData } from 'src/schemas/post.schema';
 
-@Controller("api/v1/posts")
+@Controller("posts")
 export class ApiPostController {
   constructor(private readonly postService: PostService) { }
 

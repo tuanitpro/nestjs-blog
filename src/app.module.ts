@@ -7,7 +7,6 @@ import { HttpModule } from '@nestjs/axios'
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { DatabaseModule } from './modules/database.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware'
 import configuration from './config/configuration';
 import { AppController } from './app.controller';
@@ -34,8 +33,7 @@ import { UploaderController } from './pages/uploader/uploader.controller';
       envFilePath: '.env.development',
       load: [configuration],
     }),
-    DatabaseModule,
-
+    MongooseModule.forRoot('mongodb://db:27017/blogs'),
     MongooseModule.forFeature([
       { name: 'Posts', schema: PostSchema },
       { name: 'Tags', schema: TagSchema },
